@@ -8,33 +8,37 @@ const[isUserTurn, setIsUserTurn]=useState(true);
 
 //Carga mensajes desde el localStorage
 useEffect(()=>{
-    const savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+    const savedMessages = JSON.parse(localStorage.getItem('mensaje')) || [];
+    setMensaje(savedMessages)
 }, []);
 
 //Guarda mensajes en el localStorage
-useEffect(()=>{
-    localStorage.setItem('mensaje', JSON.stringify(mensaje));
-},[mensaje]);
+const handleSend =()=>{
+    if(input.trim()) {
+       const newMessage= {
+        sender:isUserTurn ? 'Tu' : 'Asitente',
+        text: input
+       } 
 
-const handleSend= ()=>{
-    if (input.trim()){
-        const sender=isUserTurn ? 'user' : 'other';
-        const newMessage ={sender, text:input}
-        setMensaje([...mensaje, newMessage]);
-        setInput('')
-        setIsUserTurn(!isUserTurn);
+       const updateMessage = [...mensaje, newMessage]
+       setMensaje(updateMessage)
+       setInput('')
+       setIsUserTurn(!isUserTurn)
+
+       localStorage.setItem('mensaje',JSON.stringify(updateMessage))
     }
 }
+
  
 return(
 <div className="ChatBox">
     <div className="mensaje">
         {mensaje.map((msg,index)=>(
             <div key ={index}>
-                <strong>{msg.sender === 'user' ? 'Tu' : 'Otro'}</strong>   
+                <strong>{msg.sender === 'user' ? 'Bot' : 'Tu'}</strong>   
                 <Mensaje text={msg.text}/>      
             </div>
-    
+     
             ))}
     </div>
     <div className="inputbox">
